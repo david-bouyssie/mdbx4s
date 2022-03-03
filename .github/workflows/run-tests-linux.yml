@@ -56,6 +56,7 @@ jobs:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
           repository: 'erthink/libmdbx'
+          fetch-depth: 0 # required to build from tags (https://erthink.github.io/libmdbx/usage.html#autotoc_md33)
           
       # Build libmdbx
       - name: Build libmdbx
