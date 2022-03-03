@@ -71,4 +71,4 @@ jobs:
       
       # Run tests
       - name: Run tests with SBT
-        run: sbt +test
+        run: sudo sbt +test
