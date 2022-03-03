@@ -61,26 +61,6 @@ jobs:
       - name: Install libs
         shell: pwsh
         run: vcpkg install zlib --triplet=x64-windows-static
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-      
-      # Clone repo of the libmdbx C library 
-      - name: Clone libmdbx
-        uses: actions/checkout@v3
-        with:
-          # Repository name with owner. For example, actions/checkout
-          # Default: ${{ github.repository }}
-          repository: 'erthink/libmdbx'
         
-      #- name: Clone Github Repo Action
-      #  # You may pin to the exact commit or the version.
-      #  uses: GuillaumeFalourd/clone-github-repo-action@v2
-      #  with:
-      #    # Repository Owner
-      #    owner: erthink
-      #    # Repository name
-      #    repository: libmdbx
-      #    # PAT with repository scope (https://github.com/settings/tokens)
-      #    #access-token: # optional
+      - name: Run tests with SBT
+        run: sbt +test
