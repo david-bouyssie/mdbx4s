@@ -34,10 +34,10 @@ jobs:
       - uses: actions/checkout@v2
       
       # Restore from cache the previously built ports. If a "cache miss" occurs, then vcpkg is bootstrapped.
-      - name: run-vcpkg
-        # You may pin to the exact commit or the version.
-        # uses: lukka/run-vcpkg@c5ce6a7de6e5ce834a25f7d55b6c250a275a6732
-        uses: lukka/run-vcpkg@v10.1
+      #- name: run-vcpkg
+      #  # You may pin to the exact commit or the version.
+      #  # uses: lukka/run-vcpkg@c5ce6a7de6e5ce834a25f7d55b6c250a275a6732
+      #  uses: lukka/run-vcpkg@v10.1
       
       - name: Setup Java
         uses: actions/setup-java@v3.0.0
