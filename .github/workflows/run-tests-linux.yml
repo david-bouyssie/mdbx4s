@@ -59,7 +59,7 @@ jobs:
 
       # Install libmdbx
       - name: Install libmdbx
-        run: sudo make install && ls -al /usr/local/lib/libmdbx.so
+        run: sudo make install && chmod 777 /usr/local/lib/libmdbx.so && ls -al /usr/local/lib/libmdbx.so
         shell: bash
         
       # Add current dir to LD_LIBRARY_PATH
