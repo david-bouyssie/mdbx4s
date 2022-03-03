@@ -1,2 +1,6 @@
-*.class
-*.log
+project/target/
+project/project/
+target/
+.bsp
+.idea
+lowered.hnir
