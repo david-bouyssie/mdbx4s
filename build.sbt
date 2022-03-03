@@ -29,6 +29,8 @@ lazy val mdbx4s = crossProject(JVMPlatform, NativePlatform)
         "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/hawtjni-runtime-1.19-SNAPSHOT.jar",
       "org.fusesource.mdbxjni" % "mdbxjni-win64" % "99-master-SNAPSHOT" from
         "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-win64-99-master-SNAPSHOT.jar",
+      "org.fusesource.mdbxjni" % "mdbxjni-win64" % "99-master-SNAPSHOT" from
+        "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-linux64-99-master-SNAPSHOT.jar",
       "org.fusesource.mdbxjni" % "mdbxjni-all" % "99-master-SNAPSHOT" from
         "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-99-master-SNAPSHOT.jar"
     ),
