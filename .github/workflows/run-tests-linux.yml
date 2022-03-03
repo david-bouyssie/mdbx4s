@@ -62,4 +62,9 @@ jobs:
       - name: Build libmdbx
         run: make all
         shell: bash
+               
+      # Install libmdbx
+      - name: Install libmdbx
+        run: make install
+        shell: bash
           
