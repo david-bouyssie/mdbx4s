@@ -24,7 +24,7 @@ jobs:
         java: [ '8' ]
 
     env:
-      JAVA_OPTS: -Xms2G -Xmx4G -XX:+UseG1GC -Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/
+      JAVA_OPTS: -Xms2G -Xmx4G -XX:+UseG1GC
 
     name: Test using Java ${{ matrix.java }}
 
@@ -74,4 +74,4 @@ jobs:
       
       # Run tests
       - name: Run tests with SBT
-        run: sbt +test
+        run: sbt 'set javaOptions in Test +="-Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/"; +test'
