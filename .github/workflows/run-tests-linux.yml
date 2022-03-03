@@ -24,7 +24,7 @@ jobs:
         java: [ '8' ]
 
     env:
-      JAVA_OPTS: -Xms2G -Xmx4G -XX:+UseG1GC
+      JAVA_OPTS: -Xms2G -Xmx4G -XX:+UseG1GC -Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/
 
     name: Test using Java ${{ matrix.java }}
 
