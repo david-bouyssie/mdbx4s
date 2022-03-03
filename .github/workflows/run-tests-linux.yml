@@ -59,7 +59,12 @@ jobs:
 
       # Install libmdbx
       - name: Install libmdbx
-        run: sudo make install
+        run: sudo make install && ls -al /usr/local/lib/libmdbx.so
+        shell: bash
+        
+      # Add current dir to LD_LIBRARY_PATH
+      - name: Update LD_LIBRARY_PATH
+        run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
         shell: bash
 
       # Upload libmdbx to workflow artifacts
