@@ -32,7 +32,10 @@ jobs:
     steps:
     
       - name: Create .hawtjni folder (required for MDBX JNI)
-        run: mkdir /home/runner/.hawtjni/ && chmod 777 /home/runner/.hawtjni/
+        run: mkdir -p /home/runner/.hawtjni/mdbxjni/ && chmod -R 777 /home/runner/.hawtjni/
+        
+      - name: Inspect /home/runner/.hawtjni/mdbxjni/ permissions
+        run: ls -al /home/runner/.hawtjni/
 
       - name: Setup Java
         uses: actions/setup-java@v3.0.0
@@ -71,4 +74,4 @@ jobs:
       
       # Run tests
       - name: Run tests with SBT
-        run: sudo sbt +test
+        run: sbt +test
