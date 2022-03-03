@@ -48,3 +48,17 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      
+      # Clone repo of the libmdbx C library 
+      - name: Clone libmdbx
+        uses: actions/checkout@v3
+        with:
+          # Repository name with owner. For example, actions/checkout
+          # Default: ${{ github.repository }}
+          repository: 'erthink/libmdbx'
+          
+      # Build libmdbx
+      - name: Build libmdbx
+        run: make all
+        shell: bash
+          
