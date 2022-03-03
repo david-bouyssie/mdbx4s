@@ -65,6 +65,6 @@ jobs:
                
       # Install libmdbx
       - name: Install libmdbx
-        run: make install
+        run: sudo make install
         shell: bash
           
