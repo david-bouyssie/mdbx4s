@@ -6,7 +6,7 @@ name: Run tests on Windows
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    #branches: [ main ]
   pull_request:
 
   # Allows you to run this workflow manually from the Actions tab
@@ -31,7 +31,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       # Restore from cache the previously built ports. If a "cache miss" occurs, then vcpkg is bootstrapped.
       #- name: run-vcpkg
@@ -65,3 +65,22 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
+      
+      # Clone repo of the libmdbx C library 
+      - name: Clone libmdbx
+        uses: actions/checkout@v3
+        with:
+          # Repository name with owner. For example, actions/checkout
+          # Default: ${{ github.repository }}
+          repository: 'erthink/libmdbx'
+        
+      #- name: Clone Github Repo Action
+      #  # You may pin to the exact commit or the version.
+      #  uses: GuillaumeFalourd/clone-github-repo-action@v2
+      #  with:
+      #    # Repository Owner
+      #    owner: erthink
+      #    # Repository name
+      #    repository: libmdbx
+      #    # PAT with repository scope (https://github.com/settings/tokens)
+      #    #access-token: # optional
