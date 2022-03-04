@@ -547,7 +547,7 @@ class LibraryWrapper private() extends ILibraryWrapper {
   type CursorHandle = Ptr[Byte] with ICursorHandle
 
   sealed trait IDbiHandle
-  type DbiHandle = Ptr[CUnsignedInt] with IDbiHandle // CUnsignedInt intentionally wrapped
+  type DbiHandle = Option[CUnsignedInt] with IDbiHandle // CUnsignedInt intentionally wrapped
 
   sealed trait IEnvHandle
   type EnvHandle = Ptr[Byte] with IEnvHandle
@@ -564,17 +564,19 @@ class LibraryWrapper private() extends ILibraryWrapper {
   //def MDBX_VERSION_MINOR: Int = LIB.MDBX_VERSION_MINOR
 
   private val uIntSize = sizeof[UInt].toInt
-  private def _wrapUInt(uint: UInt): Ptr[Byte] = {
-    val byteArray = scala.scalanative.runtime.ByteArray.alloc(uIntSize)
+  private def _wrapUInt(uint: UInt): Option[CUnsignedInt] = {
+    Some(uint)
+    /*val byteArray = scala.scalanative.runtime.ByteArray.alloc(uIntSize)
     val byteArrayPtr = byteArray.at(0)
     val uintPtr = byteArrayPtr.asInstanceOf[Ptr[UInt]]
-    uintPtr.update(0, uint)
+    uintPtr.update(0L, uint)
 
-    byteArrayPtr
+    byteArrayPtr*/
   }
-  private def _unwrapUInt(wrappedUInt: Ptr[CUnsignedInt]): UInt = {
-    val uintPtr = wrappedUInt //.asInstanceOf[Ptr[UInt]]
-    uintPtr(0)
+  private def _unwrapUInt(wrappedUInt: Option[CUnsignedInt]): UInt = {
+    wrappedUInt.get
+    /*val uintPtr = wrappedUInt
+    uintPtr(0L)*/
   }
 
   // TODO: put this version in sqlite4s/CUtils
@@ -749,7 +751,7 @@ class LibraryWrapper private() extends ILibraryWrapper {
   def mdbx_dbi_flags_ex(txnPtr: TxnHandle, dbiPtr: DbiHandle): (Int,Int) = {
     val flagsPtr = stackalloc[UInt]()
     val statePtr = stackalloc[UInt]()
-    checkRc(LIB.mdbx_dbi_flags_ex(txnPtr, !dbiPtr, flagsPtr, statePtr))
+    checkRc(LIB.mdbx_dbi_flags_ex(txnPtr, _unwrapUInt(dbiPtr), flagsPtr, statePtr))
     ((!flagsPtr).toInt, (!statePtr).toInt)
   }
 

@@ -41,7 +41,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
       maxDbs = 2,
       mapSize = 16 * 1024 * 1024 // 16 MB,
     )
-    //envConfig.setFlags(MDBX_LIFORECLAIM)
+    envConfig.setFlags(MDBX_LIFORECLAIM)
 
     env = new Env()
 
