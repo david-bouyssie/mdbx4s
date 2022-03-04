@@ -44,6 +44,7 @@ jobs:
         id: cache-libmdbx
         uses: actions/cache@v2
         with:
+          # FIXME: why $GITHUB_WORKSPACE/libmdbx doesn't work?
           path: /home/runner/work/mdbx4s/mdbx4s/libmdbx
           key: libmdbx-build2
 
@@ -84,7 +85,7 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
 
-      #- name: Run tests with SBT
-      #  run: |
-      #    echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-      #    sbt +test
+      - name: Run tests with SBT
+        run: |
+          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+          sbt +test
