@@ -36,38 +36,56 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java }}
-          
-      - name: Clone repo of the libmdbx C library 
+
+      - name: Checks-out the current repository under $GITHUB_WORKSPACE
         uses: actions/checkout@v3
+          
+      - name: Cache LIBMDBX
+        id: cache-libmdbx
+        uses: actions/cache@v2
         with:
-          repository: 'erthink/libmdbx'
-          fetch-depth: 0 # required to build from tags (https://erthink.github.io/libmdbx/usage.html#autotoc_md33)
+          # FIXME: why $GITHUB_WORKSPACE/libmdbx doesn't work?
+          path: /home/runner/work/mdbx4s/mdbx4s/libmdbx
+          key: libmdbx-build2
+
+      - name: Clone repo of the libmdbx C library
+        if: steps.cache-libmdbx.outputs.cache-hit != 'true'
+        uses: GuillaumeFalourd/clone-github-repo-action@v2
+        with:
+          owner: 'erthink'
+          repository: 'libmdbx'
 
       - name: Build libmdbx
-        run: make lib
+        if: steps.cache-libmdbx.outputs.cache-hit != 'true'
+        working-directory: ./libmdbx
+        run: |
+          make lib
         shell: bash
 
-      - name: Install libmdbx
-        run: sudo make install
+      - name: Install libmdbx manually
+        working-directory: ./libmdbx
+        run: |
+          ls -al $GITHUB_WORKSPACE/libmdbx/
+          sudo cp $GITHUB_WORKSPACE/libmdbx/libmdbx.a /usr/local/lib/libmdbx.a
+          sudo cp $GITHUB_WORKSPACE/libmdbx/libmdbx.so /usr/local/lib/libmdbx.so
         shell: bash
-        
+
       - name: Add /usr/local/lib/ to LD_LIBRARY_PATH
         run: echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
         shell: bash
 
-      - name: Upload libmdbx.so to workflow artifacts
+      - name: Upload libmdbx.a and libmdbx.so to workflow artifacts
         uses: actions/upload-artifact@v2
         with:
           name: libmdbx-linux-gnu-x86_64
-          path: libmdbx.so
-          
-      - name: Checks-out the current repository under $GITHUB_WORKSPACE
-        uses: actions/checkout@v3
-      
+          path: |
+            ./libmdbx/libmdbx.a
+            ./libmdbx/libmdbx.so
+
       - name: Enable tmate debugging (if the debug_enabled option was set to 'true')
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
-      
+
       - name: Run tests with SBT
         run: |
           echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
