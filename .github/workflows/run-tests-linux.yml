@@ -44,7 +44,7 @@ jobs:
         id: cache-libmdbx
         uses: actions/cache@v2
         with:
-          path: $GITHUB_WORKSPACE/libmdbx/
+          path: /home/runner/work/mdbx4s/mdbx4s/libmdbx
           key: libmdbx-build2
 
       - name: Clone repo of the libmdbx C library
