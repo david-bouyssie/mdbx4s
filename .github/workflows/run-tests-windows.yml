@@ -28,7 +28,7 @@ jobs:
       
     name: Test using Java ${{ matrix.java }}
       
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Configure steps of the CI job
     steps:
       - name: Setup Java
         uses: actions/setup-java@v3.0.0
@@ -47,6 +47,7 @@ jobs:
         if: steps.cache-llvm.outputs.cache-hit != 'true'
         shell: pwsh
         run: choco install llvm --version=12.0.0 --allow-downgrade
+
       - name: Add LLVM on Path
         shell: pwsh
         run: echo "${env:ProgramFiles}\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
