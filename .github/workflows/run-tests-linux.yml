@@ -48,7 +48,7 @@ jobs:
         shell: bash
 
       - name: Install libmdbx
-        run: sudo make install #&& sudo chmod 777 /usr/local/lib/libmdbx.so && ls -al /usr/local/lib/libmdbx.so
+        run: sudo make install
         shell: bash
         
       - name: Add /usr/local/lib/ to LD_LIBRARY_PATH
@@ -71,4 +71,4 @@ jobs:
       - name: Run tests with SBT
         run: |
           echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-          sbt 'set javaOptions in Test +="-Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/"; +test'
+          sbt +test
