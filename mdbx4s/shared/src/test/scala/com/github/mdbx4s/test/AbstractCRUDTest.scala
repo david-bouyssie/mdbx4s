@@ -125,15 +125,12 @@ trait AbstractCRUDTest extends TestSuite with AbstractTestSuite {
 
     // put /w readonly transaction should fail.
     tx = env.createTransaction(true)
-    try {
+    intercept[com.github.mdbx4s.MdbxNativeException] {
       val txnInfo = tx.info(false)
       println("TxInfo:" + txnInfo)
       db.put(tx, bytes("New York"), bytes("silver"))
 
       throw new Exception("Expected MdbxNativeException")
-    } catch {
-      case e: com.github.mdbx4s.MdbxNativeException =>
-        assert(e.getMessage.toLowerCase().contains("access denied"))
     }
 
     //println("before db.close()")
