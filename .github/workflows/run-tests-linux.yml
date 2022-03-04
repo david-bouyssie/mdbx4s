@@ -69,7 +69,8 @@ jobs:
         
       # Add current dir to LD_LIBRARY_PATH
       - name: Update LD_LIBRARY_PATH
-        run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
+        #run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
+        run: echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
         shell: bash
 
       # Upload libmdbx to workflow artifacts
@@ -89,4 +90,7 @@ jobs:
       
       # Run tests
       - name: Run tests with SBT
-        run: sbt 'set javaOptions in Test +="-Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/"; +test'
+        run: |
+          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+          echo $LD_LIBRARY_PATH
+          sbt 'set javaOptions in Test +="-Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/"; +test'
