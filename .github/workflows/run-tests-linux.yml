@@ -11,6 +11,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: "false"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -30,7 +35,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      
+    
+      - name: Create .hawtjni folder (required for MDBX JNI)
+        run: mkdir -p /home/runner/.hawtjni/mdbxjni/ && chmod -R 777 /home/runner/.hawtjni/
+        
+      - name: Inspect /home/runner/.hawtjni/mdbxjni/ permissions
+        run: ls -al /home/runner/.hawtjni/
+
       - name: Setup Java
         uses: actions/setup-java@v3.0.0
         with:
@@ -53,7 +64,13 @@ jobs:
 
       # Install libmdbx
       - name: Install libmdbx
-        run: sudo make install
+        run: sudo make install && sudo chmod 777 /usr/local/lib/libmdbx.so && ls -al /usr/local/lib/libmdbx.so
+        shell: bash
+        
+      # Add current dir to LD_LIBRARY_PATH
+      - name: Update LD_LIBRARY_PATH
+        #run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
+        run: echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
         shell: bash
 
       # Upload libmdbx to workflow artifacts
@@ -66,6 +83,14 @@ jobs:
       # Checks-out the current repository under $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
       
+      # Enable tmate debugging of manually-triggered workflows if the input option was provided
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
+      
       # Run tests
       - name: Run tests with SBT
-        run: sbt +test
+        run: |
+          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+          echo $LD_LIBRARY_PATH
+          sbt 'set javaOptions in Test +="-Djava.io.tmpdir=/home/runner/.hawtjni/mdbxjni/"; +test'
