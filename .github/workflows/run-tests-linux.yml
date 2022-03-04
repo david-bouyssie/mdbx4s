@@ -76,11 +76,13 @@ jobs:
         run: echo "LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH" >> $GITHUB_ENV
         shell: bash
 
-      - name: Upload libmdbx.so to workflow artifacts
+      - name: Upload libmdbx.a and libmdbx.so to workflow artifacts
         uses: actions/upload-artifact@v2
         with:
           name: libmdbx-linux-gnu-x86_64
-          path: libmdbx.so
+          path: |
+            ./libmdbx/libmdbx.a
+            ./libmdbx/libmdbx.so
 
       - name: Enable tmate debugging (if the debug_enabled option was set to 'true')
         uses: mxschmitt/action-tmate@v3
