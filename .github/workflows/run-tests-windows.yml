@@ -54,22 +54,10 @@ jobs:
       #- name: Assert clang installed and on path
       #  shell: pwsh
       #  run: clang --version
-        
-      #- name: Cache LLVM and Clang
-      #  id: cache-llvm
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: C:/Program Files/LLVM
-      #    key: llvm-12.0.0
-      #- name: Install LLVM and Clang
-      #  uses: KyleMayes/install-llvm-action@v1
-      #  with:
-      #    version: "12.0.0"
-      #    cached: ${{ steps.cache-llvm.outputs.cache-hit }}
 
-      - name: Install zlib
-        shell: pwsh
-        run: vcpkg install zlib --triplet=x64-windows-static
+      #- name: Install zlib
+      #  shell: pwsh
+      #  run: vcpkg install zlib --triplet=x64-windows-static
 
       - name: Checks-out the current repository under $GITHUB_WORKSPACE
         uses: actions/checkout@v3
