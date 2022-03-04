@@ -46,6 +46,10 @@ jobs:
       - name: Build libmdbx
         run: make lib
         shell: bash
+        
+      - name: Enable tmate debugging (if the debug_enabled option was set to 'true')
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
 
       - name: Install libmdbx
         run: sudo make install
@@ -63,10 +67,6 @@ jobs:
           
       - name: Checks-out the current repository under $GITHUB_WORKSPACE
         uses: actions/checkout@v3
-      
-      - name: Enable tmate debugging (if the debug_enabled option was set to 'true')
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled == 'true' }}
       
       - name: Run tests with SBT
         run: |
