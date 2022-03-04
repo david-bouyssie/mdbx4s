@@ -62,11 +62,12 @@ jobs:
           make lib
         shell: bash
 
-      - name: Install libmdbx
+      - name: Install libmdbx manually
         working-directory: ./libmdbx
         run: |
           ls -al $GITHUB_WORKSPACE/libmdbx/
-          sudo make install
+          sudo cp $GITHUB_WORKSPACE/libmdbx/libmdbx.a /usr/local/lib/libmdbx.a
+          sudo cp $GITHUB_WORKSPACE/libmdbx/libmdbx.so /usr/local/lib/libmdbx.so
         shell: bash
 
       - name: Add /usr/local/lib/ to LD_LIBRARY_PATH
