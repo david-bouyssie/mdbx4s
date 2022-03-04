@@ -10,14 +10,13 @@ val sharedSettings = Seq(
   libraryDependencies ++= Seq(
     "com.lihaoyi" %%% "utest" % "0.7.10" % Test
   ),
-  
-  //resolvers += "FuseSource Community Snapshot Repository" at "https://repository.jboss.org/nexus/content/groups/fs-public-snapshots/"
 
   testFrameworks += new TestFramework("utest.runner.Framework")
 )
 
+lazy val copySharedLibraries = taskKey[Unit]("Copy shared libraries")
+
 lazy val mdbx4s = crossProject(JVMPlatform, NativePlatform)
-//lazy val mdbx4s = crossProject(NativePlatform)
   .crossType(CrossType.Full)
   .in(file("mdbx4s"))
   .settings(
@@ -31,12 +30,18 @@ lazy val mdbx4s = crossProject(JVMPlatform, NativePlatform)
         "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-99-master-SNAPSHOT.jar"
     ) ++ {
       Seq(
-        if (System.getProperty("os.name").toLowerCase.contains("win"))
-          "org.fusesource.mdbxjni" % "mdbxjni-win64" % "99-master-SNAPSHOT" from
-            "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-win64-99-master-SNAPSHOT.jar"
-        else
-          "org.fusesource.mdbxjni" % "mdbxjni-win64" % "99-master-SNAPSHOT" from
-            "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-linux64-99-master-SNAPSHOT.jar"
+        sys.props("os.name").toLowerCase match {
+          case win if win.contains("win") =>
+            "org.fusesource.mdbxjni" % "mdbxjni-win64" % "99-master-SNAPSHOT" from
+              "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-win64-99-master-SNAPSHOT.jar"
+          case linux if linux.contains("linux") =>
+            "org.fusesource.mdbxjni" % "mdbxjni-linux64" % "99-master-SNAPSHOT" from
+              "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-linux64-99-master-SNAPSHOT.jar"
+          case mac if mac.contains("mac") =>
+            "org.fusesource.mdbxjni" % "mdbxjni-osx64" % "99-master-SNAPSHOT" from
+              "https://github.com/castortech/mdbxjni/releases/download/v0.11.2/mdbxjni-osx64-99-master-SNAPSHOT.jar"
+          case osName: String => throw new RuntimeException(s"Unknown operating system $osName")
+        }
       )
     },
     fork := true
@@ -57,7 +62,35 @@ lazy val mdbx4s = crossProject(JVMPlatform, NativePlatform)
     nativeLinkingOptions ++= Seq(
       // Location of native libraries
       "-L" ++ baseDirectory.value.getAbsolutePath() ++ "/nativelib"
-    )
+    ),
+
+    // See: https://stackoverflow.com/questions/36237174/how-to-copy-some-files-to-the-build-target-directory-with-sbt
+    copySharedLibraries := {
+
+      val s: TaskStreams = streams.value
+
+      val nativeLibDir = baseDirectory.value / "nativelib"
+      s.log.info("libDir="+nativeLibDir)
+      Predef.assert(nativeLibDir.isDirectory(), "can't find 'nativelib' directory")
+
+      val targetDir = (Compile / crossTarget).value
+
+      // Find the shared libraries
+      val libFiles: Seq[File] = (nativeLibDir ** "*.dll").get() ++ (nativeLibDir ** "*.so").get()
+
+      // Use Path.rebase to pair source files with target destination in crossTarget
+      import Path._
+      val pairs = libFiles pair rebase(nativeLibDir, targetDir)
+
+      s.log.info(s"Copying shared libraries from '$nativeLibDir' to target '$targetDir'...")
+
+      // Copy files to source files to target
+      IO.copy(pairs, CopyOptions.apply(overwrite = false, preserveLastModified = true, preserveExecutable = false))
+
+      ()
+    },
+
+    (Compile / compile) := ((Compile / compile) dependsOn copySharedLibraries).value
 
   )
 
