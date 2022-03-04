@@ -36,6 +36,9 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java }}
+
+      - name: Checks-out the current repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v3
           
       - name: Cache LIBMDBX
         id: cache-libmdbx
@@ -78,9 +81,6 @@ jobs:
         with:
           name: libmdbx-linux-gnu-x86_64
           path: libmdbx.so
-          
-      - name: Checks-out the current repository under $GITHUB_WORKSPACE
-        uses: actions/checkout@v3
 
       - name: Enable tmate debugging (if the debug_enabled option was set to 'true')
         uses: mxschmitt/action-tmate@v3
