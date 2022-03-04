@@ -44,7 +44,7 @@ jobs:
           fetch-depth: 0 # required to build from tags (https://erthink.github.io/libmdbx/usage.html#autotoc_md33)
 
       - name: Build libmdbx
-        run: make all
+        run: make lib
         shell: bash
 
       - name: Install libmdbx
