@@ -41,7 +41,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
       maxDbs = 2,
       mapSize = 16 * 1024 * 1024 // 16 MB,
     )
-    envConfig.setFlags(MDBX_LIFORECLAIM)
+    //envConfig.setFlags(MDBX_LIFORECLAIM)
 
     env = new Env()
 
@@ -70,13 +70,13 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
   def A_uuidRandom_100Bytes(): Unit = {
     System.out.println("Starting uuidRandom_100Bytes")
     for (i <- 0 until I_CNT) {
-      //			long start = System.nanoTime();
-      //			System.out.println("start trans " + i);
+      //  long start = System.nanoTime();
+      //  System.out.println("start trans " + i);
       val tx = env.createTransaction()
       try {
         for (j <- 0 until J_CNT) {
           val uuid = UUID.randomUUID()
-          ///					System.out.println("\t putting " + uuid);
+          //  System.out.println("\t putting " + uuid);
           db.put(tx, UuidAdapter.getBytesFromUUID(uuid), new Array[Byte](100))
         }
         val latency = tx.commitWithLatency()
@@ -119,7 +119,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
         tx.commit()
         //assertTrue(true)
       } finally if (tx != null) tx.close()
-      //			System.out.println("Completed " + i + " in " + TimeUtils.elapsedSinceNano(start));
+      //  System.out.println("Completed " + i + " in " + TimeUtils.elapsedSinceNano(start));
     }
   }
 
@@ -130,7 +130,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
 
     var start = System.nanoTime()
     for (i <- 0 until I_CNT / 2) {
-      //			System.out.println("start trans " + i);
+      //  System.out.println("start trans " + i);
       val tx = env.createTransaction()
       try {
         val entries = new scala.collection.mutable.HashMap[Long, Array[Byte]]
@@ -179,7 +179,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
       try {
         val entries = new scala.collection.mutable.HashMap[Long, Array[Byte]]
         for (j <- 0 until J_CNT) {
-          val l = along.getAndIncrement
+          val l = along.getAndIncrement()
           val b = new Array[Byte](1024)
           random.nextBytes(b)
           db.put(tx, longToBytes(l), b)
@@ -206,7 +206,7 @@ abstract class AbstractInsertTest extends AbstractTestSuite {
         try {
           val entries = new HashMap[Long, Array[Byte]]
           for (j <- 0 until J_CNT) {
-            val l = along.getAndIncrement
+            val l = along.getAndIncrement()
             val b = new Array[Byte](3072)
             random.nextBytes(b)
             db.put(tx, longToBytes(l), b)

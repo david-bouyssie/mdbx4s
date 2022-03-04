@@ -70,8 +70,7 @@ lazy val mdbx4s = crossProject(JVMPlatform, NativePlatform)
       val s: TaskStreams = streams.value
 
       val nativeLibDir = baseDirectory.value / "nativelib"
-      s.log.info("libDir="+nativeLibDir)
-      Predef.assert(nativeLibDir.isDirectory(), "can't find 'nativelib' directory")
+      Predef.assert(nativeLibDir.isDirectory, "can't find 'nativelib' directory")
 
       val targetDir = (Compile / crossTarget).value
 
