@@ -133,7 +133,7 @@ trait AbstractCRUDTest extends TestSuite with AbstractTestSuite {
       throw new Exception("Expected MdbxNativeException")
     } catch {
       case e: com.github.mdbx4s.MdbxNativeException =>
-        assert(e.getErrorCode() == 111 || e.getErrorCode() == 5) // EACCES=111 (Permission denied); Write Fault=5
+        assert(e.getMessage.toLowerCase().contains("access denied"))
     }
 
     //println("before db.close()")
