@@ -35,30 +35,36 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java }}
+          
+      - name: Cache LLVM
+        id: cache-llvm
+        uses: actions/cache@v2
+        with:
+          path: ${env:ProgramFiles}\LLVM\
+          key: llvm-install
 
-      # Install LLVM in case if cache is missing
-      #- name: Install LLVM
-      #  shell: pwsh
-      #  run: choco install llvm --version=12.0.0 --allow-downgrade
-
-      #- name: Add LLVM on Path
-      #  shell: pwsh
-      #  run: echo "${env:ProgramFiles}\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Install LLVM (if not cached)
+        if: steps.cache-llvm.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: choco install llvm --version=12.0.0 --allow-downgrade
+      - name: Add LLVM on Path
+        shell: pwsh
+        run: echo "${env:ProgramFiles}\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       #- name: Assert clang installed and on path
       #  shell: pwsh
       #  run: clang --version
         
-      - name: Cache LLVM and Clang
-        id: cache-llvm
-        uses: actions/cache@v2
-        with:
-          path: C:/Program Files/LLVM
-          key: llvm-12.0.0
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "12.0.0"
-          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+      #- name: Cache LLVM and Clang
+      #  id: cache-llvm
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: C:/Program Files/LLVM
+      #    key: llvm-12.0.0
+      #- name: Install LLVM and Clang
+      #  uses: KyleMayes/install-llvm-action@v1
+      #  with:
+      #    version: "12.0.0"
+      #    cached: ${{ steps.cache-llvm.outputs.cache-hit }}
 
       - name: Install zlib
         shell: pwsh
