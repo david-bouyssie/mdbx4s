@@ -27,10 +27,10 @@ To use in `sbt`, replace `x.y.z` with the latest version number (currently 0.1.0
 
 If you are not familiar with Scala Native, please follow the relative [Getting Started](https://scala-native.readthedocs.io/en/latest/user/setup.html) instructions.
 
-Additionally, you need to install [LIBMDBX](https://erthink.github.io/libmdbx/usage.html) on your system as follows:
+Additionally, you need to install [LIBMDBX](https://gitflic.ru/project/erthink/libmdbx) on your system as follows:
 
 ```
-git clone https://github.com/erthink/libmdbx.git ../libmdbx --branch v0.7.0
+git clone https://gitflic.ru/project/erthink/libmdbx.git ../libmdbx --branch v0.7.0
 make -C ../libmdbx dist
 ```
 
@@ -41,7 +41,7 @@ nativeLinkingOptions ++= Seq("-L" ++ baseDirectory.value.getAbsolutePath() ++ "/
 ```
 
 ## Useful links:
-* [LIBMDBX Github](https://github.com/erthink/libmdbx)
-* [LIBMDBX documentation](https://erthink.github.io/libmdbx/)
+* [LIBMDBX Github](https://gitflic.ru/project/erthink/libmdbx)
+* [LIBMDBX documentation](https://libmdbx.dqdkfa.ru/)
 * [MDBX JNI Github](https://github.com/castortech/mdbxjni)
 * [A blog article about a Rust wrapper for MDBX](https://rmw.link/log/2021-12-21-mdbx.html)
